@@ -122,8 +122,9 @@ function setActiveNavLink() {
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
   document.querySelectorAll('.nav-links a, .mobile-menu a').forEach(link => {
+    link.classList.remove('active');
     const href = link.getAttribute('href');
-    if (href === currentPage) {
+    if (href === currentPage || (currentPage === '' && href === 'index.html')) {
       link.classList.add('active');
     }
   });

@@ -244,11 +244,12 @@
 
 .service-item:last-child { border-bottom: none; }
 
-.service-item.reverse {
-  direction: rtl;
+.service-item.reverse .service-content {
+  order: 2;
 }
-.service-item.reverse > * {
-  direction: ltr;
+
+.service-item.reverse .service-image {
+  order: 1;
 }
 
 .service-number {
@@ -294,7 +295,8 @@
     gap: 32px;
     padding: 48px 0;
   }
-  .service-item.reverse { direction: ltr; }
+  .service-item.reverse .service-content,
+  .service-item.reverse .service-image { order: unset; }
   .service-number { font-size: 3.5rem; }
 }
 

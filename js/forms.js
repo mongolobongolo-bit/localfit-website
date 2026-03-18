@@ -15,8 +15,10 @@ function initFormValidation(formId) {
     e.preventDefault();
 
     // Clear previous states
-    form.querySelectorAll('.form-error').forEach(el => el.classList.remove('form-error'));
-    form.querySelectorAll('.form-success').forEach(el => el.classList.remove('form-success'));
+    form.querySelectorAll('.form-error, .form-success').forEach(el => {
+      el.classList.remove('form-error', 'form-success');
+      el.removeAttribute('aria-invalid');
+    });
     form.querySelectorAll('.form-message').forEach(el => el.remove());
 
     let isValid = true;
@@ -26,26 +28,33 @@ function initFormValidation(formId) {
       if (!field.value.trim()) {
         markError(field, 'Dieses Feld ist erforderlich.');
         isValid = false;
-      } else {
-        field.classList.add('form-success');
       }
     });
 
-    // Validate email
+    // Validate email (only if field has a value and wasn't already marked as error)
     form.querySelectorAll('input[type="email"]').forEach(field => {
-      if (field.value && !isValidEmail(field.value)) {
+      if (field.value && !field.classList.contains('form-error') && !isValidEmail(field.value)) {
         markError(field, 'Bitte gib eine gültige E-Mail-Adresse ein.');
         isValid = false;
       }
     });
 
-    // Validate phone
+    // Validate phone (only if field has a value and wasn't already marked as error)
     form.querySelectorAll('input[type="tel"]').forEach(field => {
-      if (field.value && !isValidPhone(field.value)) {
+      if (field.value && !field.classList.contains('form-error') && !isValidPhone(field.value)) {
         markError(field, 'Bitte gib eine gültige Telefonnummer ein.');
         isValid = false;
       }
     });
+
+    // Mark valid required fields as success
+    if (!isValid) {
+      form.querySelectorAll('[required]').forEach(field => {
+        if (!field.classList.contains('form-error') && field.value.trim()) {
+          field.classList.add('form-success');
+        }
+      });
+    }
 
     if (isValid) {
       showSuccess(form);
@@ -55,13 +64,13 @@ function initFormValidation(formId) {
   // Real-time validation on blur
   form.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(field => {
     field.addEventListener('blur', () => {
-      // Remove previous state
       field.classList.remove('form-error', 'form-success');
+      field.removeAttribute('aria-invalid');
       const msg = field.parentElement.querySelector('.form-message');
       if (msg) msg.remove();
 
       if (field.hasAttribute('required') && !field.value.trim()) {
-        return; // Don't show error on first blur if empty
+        return;
       }
 
       if (field.type === 'email' && field.value && !isValidEmail(field.value)) {
@@ -78,11 +87,13 @@ function initFormValidation(formId) {
 function markError(field, message) {
   field.classList.remove('form-success');
   field.classList.add('form-error');
+  field.setAttribute('aria-invalid', 'true');
+
   const msg = document.createElement('div');
   msg.className = 'form-message error';
+  msg.setAttribute('role', 'alert');
   msg.textContent = message;
 
-  // Remove existing message first
   const existing = field.parentElement.querySelector('.form-message');
   if (existing) existing.remove();
 
@@ -99,8 +110,6 @@ function isValidPhone(phone) {
 
 function showSuccess(form) {
   const btn = form.querySelector('button[type="submit"]');
-  const originalText = btn.textContent;
-
   btn.textContent = 'Wird gesendet...';
   btn.disabled = true;
   btn.style.opacity = '0.7';
@@ -113,7 +122,7 @@ function showSuccess(form) {
         </div>
         <h3 style="margin-bottom: 12px; color: var(--text-primary);">Vielen Dank!</h3>
         <p style="color: var(--text-secondary); max-width: 400px; margin: 0 auto;">
-          Deine Anfrage wurde erfolgreich gesendet. Wir melden uns so schnell wie möglich bei dir.
+          Deine Anfrage wurde erfolgreich übermittelt. Wir melden uns so schnell wie möglich bei dir.
         </p>
       </div>
     `;
