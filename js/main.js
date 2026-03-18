@@ -123,9 +123,11 @@ function setActiveNavLink() {
 
   document.querySelectorAll('.nav-links a, .mobile-menu a').forEach(link => {
     link.classList.remove('active');
+    link.removeAttribute('aria-current');
     const href = link.getAttribute('href');
     if (href === currentPage || (currentPage === '' && href === 'index.html')) {
       link.classList.add('active');
+      link.setAttribute('aria-current', 'page');
     }
   });
 }

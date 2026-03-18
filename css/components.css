@@ -2,6 +2,27 @@
    LOCALFIT — Components (Apple Style)
    ============================================ */
 
+/* ---- SKIP LINK ---- */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 9999;
+  padding: 12px 24px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  opacity: 0;
+  transition: top 0.2s, opacity 0.2s;
+}
+.skip-link:focus {
+  top: 16px;
+  opacity: 1;
+}
+
 /* ---- NAVBAR ---- */
 .navbar {
   position: fixed;

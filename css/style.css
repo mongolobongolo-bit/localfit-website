@@ -105,6 +105,17 @@ button, input, select, textarea {
   outline: none;
 }
 
+/* Accessible focus styles */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 button { cursor: pointer; }
 
 /* --- Typography (Apple-style) --- */
